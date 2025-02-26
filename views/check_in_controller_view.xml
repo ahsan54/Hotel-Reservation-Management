@@ -1,0 +1,415 @@
+<odoo>
+    <template id="portal_guest_check_in" name="Portal My Home : Hotel Room Check In" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+            background-color: #d7f1ff; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/check/in'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+
+
+                            <h4 style="color: #4a3f41; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Check-in Request
+                                <img src="/hotel_management/static/src/img/In_icon.png" alt="Check-in Icon"
+                                      style="width: 40px; height: 40px; margin-left: 35px;"/>
+                            </h4>
+
+                            <t t-set="count"
+                               t-value="request.env['hotel.base'].sudo().search_count([('state','=','draft')])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #6c5b5f; text-align: center;">Your all-time
+                                    check-ins</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #5a2d31;"><t
+                                        t-esc="count"/></strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="hotel_check_in_form" name="Hotel Check-In Form">
+        <t t-call="website.layout">
+            <t t-set="title">Hotel Check-In</t>
+
+
+            <!-- Set Dynamic Background Image -->
+            <t t-set="background_image" t-value="'/hotel_management/static/src/img/avail_room.jpg'"/>
+            <t t-set="style_background"
+               t-value="'position: relative;'"/>
+
+            <style>
+                body {
+                <t t-raw="style_background"/>
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                }
+
+                body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('<t t-esc="background_image"/>') no-repeat center center;
+                background-size: cover;
+                <!--                filter: blur(1px);-->
+                <!--                -webkit-filter: blur(1px);-->
+                z-index: -1;
+                }
+
+                /* Container Styling */
+                .hotel-booking-container {
+                max-width: 600px;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+                margin: 50px auto;
+                text-align: left;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .hotel-booking-container h2 {
+                text-align: center;
+                color: #fff;
+                font-weight: bold;
+                }
+
+                .hotel-booking-container label {
+                font-weight: bold;
+                display: block;
+                color: #fff;
+                margin-bottom: 5px;
+                }
+
+                /* Input Fields */
+                .form-control {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                padding: 10px;
+                font-size: 16px;
+                width: 100%;
+                }
+
+                .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+                }
+
+                /* Select Dropdown */
+                #room_select {
+                background: rgba(0, 0, 0, 0.5);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                padding: 10px;
+                font-size: 16px;
+                }
+
+                /* Style the dropdown options */
+                #room_select option {
+                background: rgba(0, 0, 0, 0.8);
+                color: #fff;
+                }
+
+                /* Focus effect */
+                #room_select:focus {
+                outline: none;
+                border: 1px solid #E67E22;
+                }
+
+                /* Room Selection Container */
+                .room-container {
+                display: flex;
+                align-items: center;
+                position: relative;
+                }
+
+                /* Adjust the dropdown to accommodate button */
+                #room_select {
+                flex: 1;
+                padding-right: 120px;
+                }
+
+                /* Show Rooms Button */
+                .show-rooms-btn {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: #87CEEB; /* Light Sky Blue */
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.3s ease-in-out;
+                }
+
+                .show-rooms-btn:hover {
+                background-color: #00BFFF; /* Slightly darker sky blue */
+                }
+
+
+                /* Price Display */
+                .price-display {
+                font-size: 18px;
+                font-weight: bold;
+                color: #2ecc71;
+                }
+
+                /* Buttons */
+                .btn-primary {
+                background: #E67E22;
+                border: none;
+                padding: 12px;
+                font-size: 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                width: 100%;
+                color: #fff;
+                transition: background 0.3s ease-in-out;
+                }
+
+                .btn-primary:hover {
+                background: #D35400;
+                }
+            </style>
+
+            <div class="container">
+                <div class="hotel-booking-container">
+                    <h2>Check-In Request</h2>
+                    <!-- Main Check-In Form -->
+                    <form action="/check/in" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div class="form-group">
+                            <label>Guest Name</label>
+                            <input type="text" name="guest_name" class="form-control" required="required"/>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <a style="color: #0dcaf0; text-decoration: none;" href="/past/visit">
+                                Check Guest Past Visits
+                            </a>
+                        </div>
+
+                        <!-- Guest CNIC Past Check (No nested form) -->
+                        <div class="form-group">
+                            <label>Enter Guest CNIC To Check Past Visits</label>
+                            <input type="number" id="guest_cnic_input" class="form-control"/>
+                            <button type="button" class="btn btn-info mt-2" onclick="checkGuestPast()">View
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Guest CNIC</label>
+                            <input type="number" name="guest_cnic" class="form-control" required="required"/>
+                        </div>
+
+                        <div class="form-group room-selection">
+                            <label>Room Number</label>
+                            <div class="room-container">
+                                <select name="room_number" class="form-control" required="required" id="room_select">
+                                    <option value="">🏨 Select Room</option>
+                                    <t t-foreach="available_rooms" t-as="room">
+                                        <option t-att-value="room['id']" t-att-data-price="room['price']">
+                                            <t t-esc="room['name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                                <a href="/hotel/available_rooms" class="show-rooms-btn">📌 Show Rooms</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date Ordered</label>
+                            <input type="date" name="date_ordered" class="form-control" required="required"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Check Out Date</label>
+                            <input type="date" name="check_out_date" class="form-control" required="required"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea name="notes" class="form-control"
+                                      placeholder="Any special requests..."></textarea>
+                        </div>
+
+                        <input type="hidden" id="room_price_input" name="room_price" value="0.00"/>
+                        <div class="form-group mt-2">
+                            <label>Room Price:</label>
+                            <span id="room_price" class="price-display">0.00</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-2">Book Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                var roomSelect = document.getElementById("room_select");
+                var priceSpan = document.getElementById("room_price");
+                var priceInput = document.getElementById("room_price_input");
+
+                // Update room price when a room is selected
+                roomSelect.addEventListener("change", function() {
+                var selectedOption = this.options[this.selectedIndex];
+                var price = selectedOption.getAttribute("data-price") || "0.00";
+                priceSpan.textContent = price;
+                priceInput.value = price;
+                });
+                });
+
+                // Function to handle guest past check via redirection
+                function checkGuestPast() {
+                var guestCNIC = document.getElementById("guest_cnic_input").value;
+                if (!guestCNIC) {
+                alert("Please enter a CNIC!");
+                return;
+                }
+                // Redirect to the guest past visits page with the CNIC as a query parameter
+                window.location.href = "/check/in/past?guest_cnic_input=" + encodeURIComponent(guestCNIC);
+                }
+            </script>
+        </t>
+    </template>
+
+    <template id="room_checked_in_success" name="Granted Checked In">
+        <t t-call="website.layout">
+
+            <!-- Set Background Image for the Entire Page -->
+            <t t-set="page_background" t-value="'/hotel_management/static/src/img/check_in_approval_bg.jpg'"/>
+
+            <!-- Set Background Image for the Success Box -->
+            <t t-set="box_background" t-value="'/hotel_management/static/src/img/approval_success_bg.jpg'"/>
+
+            <div class="success-container">
+                <div class="success-box"
+                     t-attf-style="background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url({{box_background}}) no-repeat center center; background-size: cover;">
+                    <div class="icon-check">✔</div>
+                    <h2>Success!</h2>
+                    <p>Checked In Success</p>
+                    <a href="/" class="btn-success">Go Back</a>
+                </div>
+            </div>
+
+            <style>
+                body {
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                position: relative;
+                }
+
+                body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('<t t-esc="page_background"/>') no-repeat center center;
+                background-size: cover;
+                <!--                filter: blur(1px);-->
+                <!--                -webkit-filter: blur(1px);-->
+                z-index: -1;
+                }
+
+                .success-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                padding: 20px;
+                }
+
+                .success-box {
+                padding: 40px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+                box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+                transition: transform 0.3s ease-in-out;
+                position: relative;
+                color: white;
+                }
+
+                .success-box::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+                border-radius: 12px;
+                }
+
+                .success-box * {
+                position: relative;
+                z-index: 1;
+                }
+
+                .icon-check {
+                font-size: 50px;
+                color: #2ecc71;
+                margin-bottom: 15px;
+                font-weight: bold;
+                }
+
+                h2 {
+                font-size: 28px;
+                font-weight: 600;
+                margin-bottom: 10px;
+                }
+
+                p {
+                font-size: 16px;
+                opacity: 0.9;
+                margin-bottom: 20px;
+                }
+
+                .btn-success {
+                display: inline-block;
+                padding: 12px 25px;
+                font-size: 18px;
+                font-weight: bold;
+                border-radius: 8px;
+                border: none;
+                background: linear-gradient(135deg, #2ecc71, #27ae60);
+                color: #fff;
+                text-decoration: none;
+                transition: background 0.3s ease-in-out, transform 0.2s;
+                }
+
+                .btn-success:hover {
+                background: linear-gradient(135deg, #27ae60, #2ecc71);
+                transform: scale(1.05);
+                }
+
+                @media (max-width: 768px) {
+                .success-box {
+                width: 90%;
+                }
+                }
+            </style>
+        </t>
+    </template>
+
+
+</odoo>

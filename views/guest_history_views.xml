@@ -1,0 +1,58 @@
+<odoo>
+    <record id="hotel_guest_history_form_view" model="ir.ui.view">
+        <field name="model">guest.history</field>
+        <field name="name">guest.history.from</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 string="Guest Name">
+                            <field name="guest_name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="CNIC">
+                            <field name="guest_cnic"/>
+                        </group>
+
+                        <group string="Booking Info">
+                            <field name="date_ordered"/>
+                            <field name="check_out_date"/>
+                            <field name="stay_days"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Room Info">
+                            <field name="room_number"/>
+                            <field name="price"/>
+                            <field name="room_image" invisible="0" readonly="1" widget="image"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Notes">
+                            <field name="notes" widget="text"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="hotel_guest_history_list_view" model="ir.ui.view">
+        <field name="model">guest.history</field>
+        <field name="name">guest.history.list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="guest_name"/>
+                <field name="date_ordered"/>
+                <field name="price"/>
+            </list>
+        </field>
+    </record>
+
+
+</odoo>

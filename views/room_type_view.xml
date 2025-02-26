@@ -1,0 +1,61 @@
+<odoo>
+    <record id="room_type_form_view" model="ir.ui.view">
+        <field name="model">room.type</field>
+        <field name="name">room.type.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="room_type"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Room Image">
+                            <field name="room_image" widget="image" class="oe_avatar"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="A/C">
+                            <field name="ac_facility"/>
+                            <field name="ac_facility_price"/>
+                        </group>
+
+                        <group string="Heater">
+                            <field name="heater_facility"/>
+                            <field name="heater_facility_price"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Gym">
+                            <field name="gym_facility"/>
+                            <field name="gym_facility_price"/>
+                        </group>
+
+                        <group string="Room Price">
+                            <field name="room_base_price"/>
+                            <field name="room_price_included_facility"/>
+                        </group>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="room_type_list_view" model="ir.ui.view">
+        <field name="model">room.type</field>
+        <field name="name">room.type.list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="room_type"/>
+                <field name="room_price_included_facility"/>
+            </list>
+        </field>
+    </record>
+
+
+</odoo>

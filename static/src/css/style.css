@@ -1,0 +1,6 @@
+.hotel-room-image {
+    background-image: url('/hotel_management/static/src/img/hotel_room.jpg');
+    background-size: cover;
+    width: 200px;
+    height: 150px;
+}

@@ -1,0 +1,45 @@
+<odoo>
+    <record id="check_out_approval_form_view" model="ir.ui.view">
+        <field name="model">approval.check.out</field>
+        <field name="name">approval.check.out.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Guest Info">
+                            <field name="guest_id"/>
+                            <field name="guest_seq"/>
+                            <field name="guest_name"/>
+                        </group>
+
+                        <group string="Room Info">
+                            <field name="guest_room"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="approval_check_out_list_view" model="ir.ui.view">
+        <field name="model">approval.check.out</field>
+        <field name="name">approval.check.out.list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="guest_id"/>
+                <field name="guest_seq"/>
+                <field name="guest_name"/>
+            </list>
+        </field>
+    </record>
+
+
+</odoo>

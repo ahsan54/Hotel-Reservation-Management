@@ -1,0 +1,328 @@
+<odoo>
+    <template id="portal_guest_check_out" name="Portal My Home : Hotel Room Check In"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+            background-color: #d7f1ff; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/check/out'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+
+                            <h4 style="color: #4a3f41; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Check-out Request
+                                <img src="/hotel_management/static/src/img/Out_icon.png" alt="Check-out Icon"
+                                     style="width: 40px; height: 40px; margin-left: 35px;"/>
+                            </h4>
+
+                            <t t-set="count"
+                               t-value="request.env['approval.check.out'].sudo().search_count([])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #6c5b5f; text-align: center;">Your all-time
+                                    check-outs</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #5a2d31;"><t
+                                        t-esc="count"/></strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="hotel_check_out_form" name="Hotel Check-Out Form">
+        <t t-call="website.layout">
+            <t t-set="title">Hotel Check-Out Request</t>
+
+            <!-- Set Dynamic Background Image -->
+            <t t-set="background_image" t-value="'/hotel_management/static/src/img/in_success_bg.jpg'"/>
+            <t t-set="style_background"
+               t-value="'position: relative;'"/>
+
+            <div class="checkout-container">
+                <div class="checkout-box">
+                    <h2>Check-Out Request</h2>
+                    <p class="subtext">Ensure a smooth departure process for your guests.</p>
+
+                    <form action="/check/out" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <!-- Select Guest Dropdown -->
+                        <div class="form-group">
+                            <label>Select Guest</label>
+                            <select name="guest_name" class="form-control select2" required="required">
+                                <option value="">Select a Guest</option>
+                                <t t-foreach="guests" t-as="guest">
+                                    <option t-att-value="guest['display_name']">
+                                        <t t-esc="guest['display_name']"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn-checkout">Check Out</button>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                $(".select2").select2({
+                placeholder: "Search Guest...",
+                allowClear: true,
+                width: '100%'
+                });
+                });
+            </script>
+
+            <style>
+                body {
+                <t t-raw="style_background"/>
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                }
+
+                body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('<t t-esc="background_image"/>') no-repeat center center;
+                background-size: cover;
+<!--                filter: blur(1px);-->
+<!--                -webkit-filter: blur(1px);-->
+                z-index: -1;
+                }
+
+                .checkout-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                padding: 20px;
+                }
+
+                .checkout-box {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                padding: 35px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+                box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+                transition: transform 0.3s ease-in-out;
+                }
+
+                .checkout-box::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: inherit;
+                border-radius: 12px;
+                z-index: -1;
+                transition: transform 0.3s ease-in-out;
+                }
+
+                .checkout-box:hover::before {
+                transform: scale(1.02);
+                }
+
+
+                h2 {
+                font-size: 28px;
+                font-weight: 600;
+                margin-bottom: 10px;
+                }
+
+                .subtext {
+                font-size: 16px;
+                opacity: 0.8;
+                margin-bottom: 20px;
+                }
+
+                .form-group {
+                text-align: left;
+                margin-bottom: 20px;
+                }
+
+                .form-control {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+                border-radius: 8px;
+                border: none;
+                background: rgba(255, 255, 255, 0.3);
+                color: #fff;
+                outline: none;
+                transition: background 0.3s ease-in-out;
+                }
+
+                .form-control:focus {
+                background: rgba(255, 255, 255, 0.5);
+                }
+
+                .btn-checkout {
+                width: 100%;
+                padding: 14px;
+                font-size: 18px;
+                border-radius: 8px;
+                border: none;
+                background: linear-gradient(135deg, #ff416c, #ff4b2b);
+                color: #fff;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.3s ease-in-out;
+                }
+
+                .btn-checkout:hover {
+                background: linear-gradient(135deg, #ff4b2b, #ff416c);
+                }
+
+                @media (max-width: 768px) {
+                .checkout-box {
+                width: 90%;
+                }
+                }
+            </style>
+        </t>
+    </template>
+
+    <template id="room_checked_out_requested_success" name="Requested Checked Out">
+        <t t-call="website.layout">
+
+           <!-- Set Background Image for the Entire Page -->
+            <t t-set="page_background" t-value="'/hotel_management/static/src/img/check_out_approval_bg.jpg'"/>
+
+
+            <!-- Set Background Image for the Success Box -->
+            <t t-set="box_background" t-value="'/hotel_management/static/src/img/approval_success_bg.jpg'"/>
+            <t t-set="style_box_bg"
+               t-value="'background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url(' + box_background + ') no-repeat center center; background-size: cover;'"/>
+
+            <div class="success-container">
+                <div class="success-box" t-att-style="style_box_bg">
+                    <div class="icon-check">✔</div>
+                    <h2>Success!</h2>
+                    <p>Requested Check-Out.Wait while we do some of our back work!</p>
+                    <a href="/" class="btn-success">Go Back</a>
+                </div>
+            </div>
+
+            <style>
+                 body {
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                position: relative;
+                }
+
+                body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('<t t-esc="page_background"/>') no-repeat center center;
+                background-size: cover;
+<!--               filter: blur(1px);-->
+<!--                -webkit-filter: blur(1px);-->
+                z-index: -1;
+                }
+
+                .success-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                padding: 20px;
+                }
+
+                .success-box {
+                padding: 40px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+                box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+                transition: transform 0.3s ease-in-out;
+                position: relative;
+                color: white;
+                }
+
+                .success-box::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+                border-radius: 12px;
+                }
+
+                .success-box * {
+                position: relative;
+                z-index: 1;
+                }
+
+                .icon-check {
+                font-size: 50px;
+                color: #2ecc71;
+                margin-bottom: 15px;
+                font-weight: bold;
+                }
+
+                h2 {
+                font-size: 28px;
+                font-weight: 600;
+                margin-bottom: 10px;
+                }
+
+                p {
+                font-size: 16px;
+                opacity: 0.9;
+                margin-bottom: 20px;
+                }
+
+                .btn-success {
+                display: inline-block;
+                padding: 12px 25px;
+                font-size: 18px;
+                font-weight: bold;
+                border-radius: 8px;
+                border: none;
+                background: linear-gradient(135deg, #2ecc71, #27ae60);
+                color: #fff;
+                text-decoration: none;
+                transition: background 0.3s ease-in-out, transform 0.2s;
+                }
+
+                .btn-success:hover {
+                background: linear-gradient(135deg, #27ae60, #2ecc71);
+                transform: scale(1.05);
+                }
+
+                @media (max-width: 768px) {
+                .success-box {
+                width: 90%;
+                }
+                }
+            </style>
+        </t>
+    </template>
+
+
+</odoo>
+
+
+
+
+
+

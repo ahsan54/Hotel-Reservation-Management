@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+        <record model="ir.module.category" id="admin_approval_groups_root">
+            <field name="name">Asset Two Level Approvals</field>
+            <field name="description">Asset Approval Security</field>
+        </record>
+
+        <record model="res.groups" id="check_in_approval_verify">
+            <field name="name">Check In Approval</field>
+            <field name="category_id" ref="admin_approval_groups_root"/>
+        </record>
+
+        <record model="res.groups" id="check_out_approval_approve">
+            <field name="name">Check Out Approval</field>
+            <field name="category_id" ref="admin_approval_groups_root"/>
+        </record>
+        <record model="res.groups" id="admin_dashboard_approval_approve">
+            <field name="name">Admin DashBoard View</field>
+            <field name="category_id" ref="admin_approval_groups_root"/>
+        </record>
+    </data>
+</odoo>

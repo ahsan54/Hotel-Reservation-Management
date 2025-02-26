@@ -1,0 +1,112 @@
+<odoo>
+    <!-- Form View -->
+    <record id="logs_room_booked_form_view" model="ir.ui.view">
+        <field name="model">room.booked.logs</field>
+        <field name="name">room.booked.logs.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="room_id" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Sequence">
+                            <field name="room_seq"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Booking Status">
+                            <field name="room_booked"/>
+                        </group>
+
+                        <group string="Booking Date">
+                            <field name="room_booked_date"/>
+                            <field name="room_check_out_date"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Price">
+                            <field name="room_price"/>
+                        </group>
+
+                        <group string="Guest Details">
+                            <field name="room_booking_user_name"/>
+                            <field name="room_booking_user_cnic"/>
+                        </group>
+                    </group>
+
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="logs_room_booked_list_view" model="ir.ui.view">
+        <field name="model">room.booked.logs</field>
+        <field name="name">room.booked.logs.list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="room_seq"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="logs_room_kanban_view" model="ir.ui.view">
+        <field name="model">room.booked.logs</field>
+        <field name="name">room.booked.logs.kanban</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_view o_kanban_grouped">
+                <field name="room_booking_user_cnic"/>
+                <field name="room_booking_user_name"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card o_kanban_record p-3 shadow-lg rounded"
+                             t-attf-style="background-image: url('/web/image/room.booked.logs/#{record.id.raw_value}/room_image'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+                             t-att-title="'Image URL: /web/image/room.booked.logs/'+record.id.raw_value+'/room_image'">
+                            <!-- Room Name -->
+                            <div class="text-center mb-2">
+                                <h3 style="background-color: pink; color: black; display: inline-block; padding: 5px 10px; border-radius: 8px;">
+                                    <field name="room_id"/>
+                                </h3>
+                            </div>
+
+                            <!-- Room Seq -->
+                            <div class="o_kanban_details text-center">
+
+                                <!-- Room Status (User CNIC and Name as Tags) -->
+                                <div class="o_kanban_status mt-2">
+                                    <t t-if="record.room_booking_user_cnic and record.room_booking_user_name">
+                                        <span class="badge badge-primary px-3 py-2"
+                                              style="font-size: 14px; border-radius: 10px;">
+                                            <t t-esc="record.room_booking_user_name.raw_value || ''"/>
+                                        </span>
+                                        <br/>
+                                        <br/>
+                                        <span class="badge badge-primary px-3 py-2"
+                                              style="font-size: 14px; border-radius: 10px; margin-right: 5px;">
+                                            <t t-esc="record.room_booking_user_cnic.raw_value || ''"/>
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge badge-secondary px-3 py-2"
+                                              style="font-size: 14px; border-radius: 10px;">No User Data</span>
+                                    </t>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

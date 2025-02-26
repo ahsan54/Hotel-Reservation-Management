@@ -1,0 +1,95 @@
+<odoo>
+    <!-- Window Action for Hotel Base -->
+    <record id="action_hotel_base" model="ir.actions.act_window">
+        <field name="name">Hotel Base</field>
+        <field name="res_model">hotel.base</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Container Menu for Hotel Management (no action) -->
+    <menuitem id="hotel_base_parent_menu_id"
+              name="Hotel Module"
+              sequence="1"/>
+
+    <!-- Hotel leaf menu with action -->
+    <menuitem id="hotel_base_menu_id"
+              name="Check In Requests(Approved)"
+              parent="hotel_base_parent_menu_id"
+              action="action_hotel_base"
+              sequence="2"/>
+
+    <!-- Window Action for Hotel Rooms -->
+    <record id="hotel_room_action" model="ir.actions.act_window">
+        <field name="name">Hotel Room</field>
+        <field name="res_model">hotel.room</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- Container Menu for Configuration (no action) -->
+    <menuitem id="config_rooms_id"
+              name="Configuration"
+              parent="hotel_base_parent_menu_id"
+              sequence="5"/>
+
+    <!-- Rooms leaf menu with action -->
+    <menuitem id="config_rooms_menu_id"
+              name="Rooms"
+              parent="config_rooms_id"
+              action="hotel_room_action"
+              sequence="1"/>
+
+    <!-- Window Action for Room Type -->
+    <record id="room_type_action" model="ir.actions.act_window">
+        <field name="name">Hotel Room Type</field>
+        <field name="res_model">room.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="config_room_type_menu_id"
+              name="Room Type"
+              parent="config_rooms_id"
+              action="room_type_action"
+              sequence="10"/>
+
+
+    <record id="guest_history_action" model="ir.actions.act_window">
+        <field name="name">Guest History</field>
+        <field name="res_model">guest.history</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="config_guest_history_menu_id"
+              name="Guest History"
+              parent="hotel_base_parent_menu_id"
+              action="guest_history_action"
+              sequence="4"/>
+
+
+    <record id="approval_check_out_action" model="ir.actions.act_window">
+        <field name="name">Approve Check Out</field>
+        <field name="res_model">approval.check.out</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="config_check_out_approval_menu_id"
+              name="Check Out Request"
+              parent="hotel_base_parent_menu_id"
+              action="approval_check_out_action"
+              sequence="3"/>
+
+
+    <!-- Window Action for Logs Rooms -->
+    <record id="logs_room_action" model="ir.actions.act_window">
+        <field name="name">Room Logs</field>
+        <field name="res_model">room.booked.logs</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <menuitem id="logs_rooms_id"
+              name="Room Logs"
+              parent="config_rooms_id"
+              action="logs_room_action"
+              sequence="25"/>
+
+
+</odoo>

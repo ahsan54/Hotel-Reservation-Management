@@ -1,0 +1,549 @@
+<odoo>
+    <template id="dashboard_controller_view_id" name="Portal My Home : DashBoard View"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box"
+                     groups="hotel_management.admin_dashboard_approval_approve"
+                     style="cursor: pointer; width: 420px; height: 110px;
+                background: linear-gradient(135deg, #1C1C1C, #292929); /* Elegant Dark Gradient */
+                color: #F0A500; /* Luxurious Gold Text */
+                border-radius: 12px;
+                padding: 15px;
+                box-shadow: 0px 4px 15px rgba(240, 165, 0, 0.5); /* Golden Glow */
+                transition: all 0.3s ease-in-out;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                position: relative;
+                overflow: hidden;">
+
+                    <!-- Dashboard Icon (Positioned at Top-Right) -->
+                    <img src="/hotel_management/static/src/img/dashboard_new.png"
+                         alt="Dashboard Icon"
+                         style="width: 45px; height: 50px;
+                            position: absolute;
+                            top: 10px; right: 15px;"/>
+
+                    <!-- Clickable Link -->
+                    <a t-att-href="'/filter/check_ins'"
+                       style="display: block; text-decoration: none; color: inherit; width: 100%;">
+
+                        <div class="o_portal_doc">
+                            <!-- Title (Centered) -->
+                            <h4 style="font-family: 'Playfair Display', serif;
+                                   font-weight: 700;
+                                   font-size: 22px;
+                                   margin-bottom: 20px;
+                                   letter-spacing: 1px;
+                                   color: #F0A500;">
+                                DashBoard
+                            </h4>
+
+                            <!-- Subtitle (Centered, Two Lines Below) -->
+                            <p style="font-family: 'Playfair Display', serif;
+                                  font-size: 14px;
+                                  color: #D9D9D9;
+                                  font-weight: 500;
+                                  text-align: center;
+                                  margin-top: -10px;">
+                                Admin View <span style="font-size: 20px;">🦅</span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="dashboard_controller_sub_view_id_1" name="DashBoard Sub View">
+        <t t-call="website.layout">
+            <t t-set="title">Dashboard</t>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                let months = [
+                " ", "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+                ];
+                let currentDate = new Date();
+                let currentMonth = 0; // Start with "Select Month" (index 0)
+                let currentYear = currentDate.getFullYear();
+
+                function getFirstDayOfMonth(year, month) {
+                if (month === 0) return ""; // No date for "Select Month"
+                return `${year}-${String(month).padStart(2, '0')}-01`;
+                }
+
+                function updateDashboardTitle() {
+                // Only set month and year, no "Dashboard" here
+                document.getElementById("dashboard-title").innerText = `${months[currentMonth]} ${currentYear}`;
+                document.getElementById("selected-month-hidden").value = getFirstDayOfMonth(currentYear, currentMonth);
+                }
+
+                function changeMonth(step) {
+                currentMonth += step;
+                if (currentMonth
+                &lt;
+                0) {
+                currentMonth = 12;
+                currentYear -= 1;
+                } else if (currentMonth > 12) {
+                currentMonth = 0;
+                currentYear += 1;
+                }
+                document.getElementById("month-dropdown").value = months[currentMonth];
+                updateDashboardTitle();
+                // No form submission here; wait for "Check-in," "Check-out," "All Guests," or "All Rooms" click
+                }
+
+                document.getElementById("prev-month").addEventListener("click", function() {
+                changeMonth(-1);
+                });
+
+                document.getElementById("next-month").addEventListener("click", function() {
+                changeMonth(1);
+                });
+
+                document.getElementById("today-btn").addEventListener("click", function() {
+                currentMonth = new Date().getMonth() + 1; // 1-based index
+                currentYear = new Date().getFullYear();
+                document.getElementById("month-dropdown").value = months[currentMonth];
+                updateDashboardTitle();
+                });
+
+                document.getElementById("month-dropdown").addEventListener("change", function() {
+                currentMonth = months.indexOf(this.value);
+                updateDashboardTitle();
+                });
+
+                document.getElementById("check-in").addEventListener("click", function() {
+                if (currentMonth === 0) {
+                alert("Please select a month first!");
+                } else {
+                document.getElementById("request-type-hidden").value = "check_in";
+                document.getElementById("view-bookings-form").submit();
+                }
+                });
+
+                document.getElementById("check-out").addEventListener("click", function() {
+                if (currentMonth === 0) {
+                alert("Please select a month first!");
+                } else {
+                document.getElementById("request-type-hidden").value = "check_out";
+                document.getElementById("view-bookings-form").submit();
+                }
+                });
+
+                document.getElementById("all-guests").addEventListener("click", function() {
+                document.getElementById("request-type-hidden").value = "all_guests";
+                document.getElementById("view-bookings-form").submit();
+                });
+
+                document.getElementById("all-rooms").addEventListener("click", function() {
+                document.getElementById("request-type-hidden").value = "all_rooms";
+                document.getElementById("view-bookings-form").submit();
+                });
+
+                updateDashboardTitle(); // Set initial state to "Select Month"
+                });
+            </script>
+
+            <style>
+                .dashboard-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start; /* Fully left-aligned */
+                    padding: 15px;
+                }
+
+                @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&amp;display=swap');
+
+                .dashboard-title {
+                    font-family: 'Fredoka One', cursive;
+                    font-size: 100px; /* Large, eye-catching size */
+                    font-weight: 1900; /* keep as it is */
+                    margin: 0 0 0px;
+                    letter-spacing: 1px;
+                    display: inline-block;
+                }
+
+                /* Style for each span (character) */
+                .dashboard-title span {
+                    /* Gradient per character: purple to teal, with sky colors */
+                    background: linear-gradient(to right, #6F428E 25%, #3EA9A9 50%, #87CEEB 75%, #E0FFFF 100%);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+                    transition: background 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+                    display: inline-block; /* Allows transformations to work properly */
+                }
+
+                /* Hover effect for each character */
+                .dashboard-title span:hover {
+                    /* Reverse gradient direction on hover */
+                    background: linear-gradient(to right, #70d4ff 50%, #70d4ff 100%);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                    transform: scale(1.2) translateY(-5px); /* Slightly larger zoom per character */
+                    text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+                }
+
+                .dashboard-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px; /* Increased gap for better spacing */
+                    padding: 20px 25px; /* Increased padding for a softer look */
+                    background: #6F428E; /* Main purple background, unchanged for consistency */
+                    border-radius: 15px; /* Increased border-radius for a softer, rounded look */
+                    color: #FFFFFF; /* Bright white for maximum contrast against dark background */
+                    font-weight: bold;
+                    width: 100%; /* Full width for header */
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+                    transition: all 0.3s ease; /* Smooth transition for hover effects */
+                }
+
+                .dashboard-header h2 {
+                    margin: 0;
+                    font-size: 24px; /* Slightly larger for better readability */
+                    color: #FFFFFF; /* Ensure month/year text contrasts with background */
+                }
+
+                .date-navigation {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .date-navigation button {
+                    background: transparent; /* No background for arrows and Today, just borders */
+                    color: #FFFFFF; /* White text for contrast */
+                    border: 2px solid #9ed7ff; /* Thicker border for emphasis, matching month-dropdown */
+                    padding: 10px 15px; /* Increased padding for a softer look */
+                    font-size: 14px;
+                    border-radius: 10px; /* Increased border-radius for rounded corners */
+                    cursor: pointer;
+                    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+                }
+
+                .date-navigation button:hover {
+                    border-color: #5a3575; /* Darker purple for hover, matching other elements */
+                    background-color: rgba(255, 255, 255, 0.1); /* Subtle white overlay on hover for contrast */
+                    color: #FFFFFF; /* Maintain white text on hover */
+                }
+
+                #today-btn {
+                    background: linear-gradient(to right, #6F428E, #3EA9A9); /* Gradient for Today button, matching month-dropdown */
+                    color: #000000; /* Black text for readability against gradient */
+                    border: 2px solid #9ed7ff; /* Consistent border */
+                }
+
+                #today-btn:hover {
+                    background: linear-gradient(to right, #5a3575, #2e8b8b); /* Darker gradient on hover for consistency */
+                    border-color: #5a3575; /* Match hover border color */
+                    color: #FFFFFF; /* White text on hover for contrast */
+                }
+
+                .month-dropdown {
+                    background: linear-gradient(to right, #6F428E, #3EA9A9); /* Gradient background, matching Today button */
+                    color: #000000; /* Black text for readability */
+                    border: 2px solid #3EA9A9; /* Thicker border for consistency */
+                    padding: 10px 15px; /* Increased padding for a softer look */
+                    border-radius: 10px; /* Increased border-radius for rounded corners */
+                    cursor: pointer;
+                    transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease; /* Smooth transitions */
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                }
+
+                .month-dropdown:hover {
+                    background: #3EA9A9; /* Same as the dropdown */
+                    color: black; /* White text */
+                    border-color: #5a3575; /* Match hover border color */
+                }
+
+                .dashboard-cards {
+                    display: flex;
+                    justify-content: center;
+                    gap: 20px;
+                    margin-top: 20px;
+                }
+
+                .dashboard-card {
+                    width: 265px; /* Match Check-in Requests width */
+                    height: 75px; /* Match Check-in Requests height */
+                    background: linear-gradient(to right, #6F428E, #3EA9A9);
+                    padding: 20px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    cursor: pointer;
+                    transition: transform 0.3s ease-in-out;
+                }
+
+                .dashboard-card:hover {
+                    transform: scale(1.05);
+                }
+
+                .badge {
+                    background: orange;
+                    color: black;
+                    padding: 4px 8px;
+                    border-radius: 50%;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+
+                .booking-container {
+                    margin-top: 30px;
+                }
+
+                .room-container {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 15px;
+                    padding: 20px;
+                }
+
+                .room-box {
+                    position: relative;
+                    height: 200px;
+                    background: #f0f8ff;
+                    padding: 15px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                    text-align: center;
+                    overflow: hidden;
+                    transition: transform 0.3s ease-in-out;
+                    background: transparent;
+                }
+
+                .room-box:hover {
+                    transform: translateY(-10px) scale(1.05);
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                }
+
+                .room-notch {
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 130px;
+                    height: 32.5px;
+                    background: black;
+                    border-radius: 0 0 12px 12px;
+                    color: white;
+                    font-size: 16px;
+                    font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+                    z-index: 10;
+                }
+
+                .room-number {
+                    font-size: 22px;
+                    font-weight: bold;
+                    margin-top: 30px;
+                    color: white;
+                    font-family: 'Playfair Display', serif;
+                }
+
+                .room-details {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 8px;
+                    background: #d0eaff;
+                    backdrop-filter: blur(8px);
+                }
+
+                .room-details p {
+                    font-size: 14px;
+                    margin: 5px 0;
+                    font-family: 'Poppins', sans-serif;
+                }
+
+                .no-results {
+                    margin-top: 20px;
+                    font-style: italic;
+                    color: #777;
+                }
+
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;family=Playfair+Display:wght@600&amp;family=Roboto:wght@400&amp;display=swap');
+
+                body {
+                    font-family: 'Roboto', sans-serif;
+                    background: linear-gradient(to right, #ebf6ff, #dff0ff);
+                }
+            </style>
+
+            <div class="container mt-4">
+                <form id="view-bookings-form" action="/filter/check_ins" method="get" style="display: none;">
+                    <input type="text" id="selected-month-hidden" name="require_month"/>
+                    <input type="text" id="request-type-hidden" name="request_type"/>
+                </form>
+
+                <div class="dashboard-container">
+                    <p class="dashboard-title">
+                        <span>d</span><span>a</span><span>s</span><span>h</span><span>b</span><span>o</span><span>
+                        a</span><span>r</span><span>d</span>
+                    </p>
+                    <div class="dashboard-header">
+                        <h2 id="dashboard-title"></h2> <!-- Month and year only -->
+                        <div class="date-navigation">
+                            <button id="prev-month">←</button>
+                            <button id="today-btn">Today</button>
+                            <button id="next-month">→</button>
+                            <select id="month-dropdown" class="month-dropdown">
+                                <t t-foreach="['Select Month', 'January','February','March','April','May','June','July','August','September','October','November','December']"
+                                   t-as="month">
+                                    <option t-att-value="month" t-esc="month"/>
+                                </t>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-cards">
+                    <div class="dashboard-card" id="check-in">
+                        <span>🔄 Check-in Requests</span>
+                        <span class="badge" t-esc="len(bookings_list) if bookings_list else '0'"></span>
+                    </div>
+                    <div class="dashboard-card" id="check-out">
+                        <span>🔁 Check-out Requests</span>
+                        <span class="badge" t-esc="len(check_out_list) if check_out_list else '0'"></span>
+                    </div>
+                    <div class="dashboard-card" id="all-guests">
+                        <span>👤 All Guests</span>
+                        <span class="badge" t-esc="len(all_guests) if all_guests else '0'"></span>
+                    </div>
+                    <div class="dashboard-card" id="all-rooms">
+                        <span>🏠 All Rooms</span>
+                        <span class="badge" t-esc="len(all_rooms) if all_rooms else '0'"></span>
+                    </div>
+                </div>
+
+                <div class="booking-container">
+                    <!-- Month-specific bookings (Check-in and Check-out only) -->
+                    <t t-if="selected_month and selected_month != ' ' and (request_type == 'check_in' or request_type == 'check_out')">
+                        <!--                        <h3>Bookings for <t t-esc="selected_month"/></h3>-->
+                        <t t-if="request_type == 'check_in' and bookings_list and len(bookings_list) > 0">
+                            <h3>Check Ins Of Month <t t-esc="selected_month"/></h3><br/><br/>
+                            <div class="room-container">
+                                <t t-foreach="bookings_list" t-as="room">
+                                    <div class="room-box"
+                                         t-att-style="'background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url(data:image/jpeg;base64,' + (room['room_image'] or '/hotel_management/static/src/img/avail_room.jpg') + ') no-repeat center center; background-size: cover;'">
+                                        <div t-attf-class="room-notch">
+                                            <t t-esc="room['room_name']"/>
+                                        </div>
+                                        <h3 class="room-number">
+                                            <t t-esc="room['room_seq_no']"/>
+                                        </h3>
+                                        <div class="room-details">
+                                            <p>Check In: <t t-esc="room['room_booked_date']"/></p>
+                                            <p>Check Out: <t t-esc="room['room_check_out_date']"/></p>
+                                            <p><t t-esc="room['room_price']"/> USD</p>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-elif="request_type == 'check_out' and check_out_list and len(check_out_list) > 0">
+                            <h3>To Be Check Out In <t t-esc="selected_month"/></h3><br/><br/>
+                            <div class="room-container">
+                                <t t-foreach="check_out_list" t-as="check_out">
+                                    <div class="room-box"
+                                         t-att-style="'background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url(data:image/jpeg;base64,' + (check_out['room_image'] or '/hotel_management/static/src/img/avail_room.jpg') + ') no-repeat center center; background-size: cover;'">
+                                        <div t-attf-class="room-notch">
+                                            <t t-esc="check_out['guest_name']"/>
+                                        </div>
+                                        <h3 class="room-number">
+                                            <t t-esc="check_out['room_number']"/>
+                                        </h3>
+                                        <div class="room-details">
+                                            <p>Check In: <t t-esc="check_out['date_ordered']"/></p>
+                                            <p>Check Out: <t t-esc="check_out['check_out_date']"/></p>
+                                            <p><t t-esc="check_out['price']"/> USD</p>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <p class="no-results">No bookings found for this month.</p>
+                        </t>
+                    </t>
+
+                    <!-- All Guests (no month dependency) -->
+                    <t t-if="request_type == 'all_guests' and all_guests and len(all_guests) > 0">
+                        <h3>Current Entertained Guests</h3>
+                        <div class="room-container">
+                            <t t-foreach="all_guests" t-as="guest">
+                                <div class="room-box"
+                                     t-att-style="'background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url(/hotel_management/static/src/img/past_visit.jpg) no-repeat center center; background-size: cover;'">
+                                    <div t-attf-class="room-notch">
+                                        <t t-esc="guest['guest_name']"/>
+                                    </div>
+                                    <h3 class="room-number">
+                                        <t t-esc="guest['guest_cnic']"/>
+                                    </h3>
+                                    <div class="room-details">
+                                        <p>Check In: <t t-esc="guest['date_ordered']"/></p>
+                                        <p>Check Out: <t t-esc="guest['check_out_date']"/></p>
+                                        <p><t t-esc="guest['price']"/> USD</p>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-elif="request_type == 'all_guests' and (not all_guests or len(all_guests) == 0)">
+                        <p class="no-results">No guests found.</p>
+                    </t>
+
+                    <!-- All Rooms (no month dependency) -->
+                    <t t-if="request_type == 'all_rooms' and all_rooms and len(all_rooms) > 0">
+                        <h3>Room &amp; Statuses</h3>
+                        <div class="room-container">
+                            <t t-foreach="all_rooms" t-as="room">
+                                <div class="room-box"
+                                     t-att-style="'background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url(data:image/jpeg;base64,' + (room['room_image'] or '/hotel_management/static/src/img/default_room.jpg') + ') no-repeat center center; background-size: cover;'">
+                                    <div t-attf-class="room-notch">
+                                        <t t-if="room['status'] == 'done'">
+                                            <span>Booked</span>
+                                        </t>
+                                        <t t-if="room['status'] == 'draft'">
+                                            <span>Available</span>
+                                        </t>
+                                    </div>
+                                    <h3 class="room-number">
+                                        <t t-esc="room['room_price']"/> USD
+                                    </h3>
+                                    <div class="room-details">
+                                        <p>A/C: <t t-esc="room['ac_facility']"/></p>
+                                        <p>Heater: <t t-esc="room['heater_facility']"/></p>
+                                        <p>Gym: <t t-esc="room['gym_facility']"/></p>
+                                        <p>Guest: <t t-esc="room['guest_id']"/></p>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-elif="request_type == 'all_rooms' and (not all_rooms or len(all_rooms) == 0)">
+                        <p class="no-results">No rooms found.</p>
+                    </t>
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+</odoo>

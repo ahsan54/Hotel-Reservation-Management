@@ -1,0 +1,369 @@
+<odoo>
+    <template id="guest_history_main_page" name="Guest History Page">
+        <t t-call="website.layout">
+            <t t-set="title">Past-Visits</t>
+
+            <t t-set="background_image" t-value="'/hotel_management/static/src/img/past_visit.jpg'"/>
+            <t t-set="style_background"
+               t-value="'position: relative;'"/>
+
+            <div class="hotel-booking-container">
+                <div class="content-wrapper">
+                    <div class="past-box">
+                        <h2>Guest Past Visits</h2>
+                        <form action="/past/visit" method="get">
+                            <div class="form-group">
+                                <label>Guest CNIC</label>
+                                <input type="number" name="guest_cnic_input" class="form-control" required="required"/>
+                            </div>
+                            <button type="submit" class="btn-checkout">🔍 Check Past Visits</button>
+                        </form>
+                    </div>
+                    <div class="back-btn-container">
+                        <a href="/check/in" class="btn-back">Go Back</a>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                body {
+                <t t-raw="style_background"/>
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                }
+
+                body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('<t t-esc="background_image"/>') no-repeat center center;
+                background-size: cover;
+                <!--                filter: blur(1px);-->
+                <!--                -webkit-filter: blur(1px);-->
+                z-index: -1;
+                }
+
+                .hotel-booking-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                width: 100%;
+                padding: 20px;
+                }
+
+                .content-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                width: 100%;
+                max-width: 1200px; /* Increased max-width for wider container */
+                }
+
+                .past-box {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                padding: 35px;
+                border-radius: 12px;
+                width: 100%;
+                max-width: 800px; /* Increased max-width for wider form box */
+                text-align: center;
+                box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+                transition: transform 0.3s ease-in-out;
+                }
+
+                .past-box::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: inherit;
+                border-radius: 12px;
+                z-index: -1;
+                transition: transform 0.3s ease-in-out;
+                }
+
+                .past-box:hover::before {
+                transform: scale(1.02);
+                }
+
+                h2 {
+                font-size: 28px;
+                font-weight: 600;
+                margin-bottom: 20px;
+                }
+
+                .form-group {
+                text-align: left;
+                margin-bottom: 20px;
+                }
+
+                .form-control {
+                width: 100%;
+                padding: 12px;
+                font-size: 16px;
+                border-radius: 8px;
+                border: none;
+                background: rgba(255, 255, 255, 0.3);
+                color: #fff;
+                outline: none;
+                transition: background 0.3s ease-in-out;
+                }
+
+                .form-control:focus {
+                background: rgba(255, 255, 255, 0.5);
+                }
+
+                .btn-checkout {
+                width: 100%;
+                padding: 14px;
+                font-size: 18px;
+                border-radius: 8px;
+                border: none;
+                background: linear-gradient(135deg, #ff416c, #ff4b2b);
+                color: #fff;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.3s ease-in-out;
+                text-decoration: none;
+                }
+
+                .btn-checkout:hover {
+                background: black;
+                color: white;
+                }
+
+                .back-btn-container {
+                margin-top: 10px;
+                }
+
+                .btn-back {
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 8px;
+                border: none;
+                background: #87CEEB;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background 0.3s ease-in-out;
+                text-decoration: none;
+                display: inline-block;
+                }
+
+                .btn-back:hover {
+                background: grey;
+                color: white;
+                }
+
+                @media (max-width: 768px) {
+                .past-box {
+                width: 90%;
+                }
+
+                .content-wrapper {
+                width: 95%;
+                }
+                }
+            </style>
+        </t>
+    </template>
+
+    <template id="hotel_guest_history" name="Guest History">
+        <t t-set="title">Past-Visits</t>
+        <t t-set="background_image" t-value="'/hotel_management/static/src/img/past_visit_box.jpg'"/>
+        <t t-set="style_background" t-value="'position: relative;'"/>
+
+        <div class="room-container">
+            <t t-foreach="guest_past_visits" t-as="past">
+                <div class="guest-history-box">
+                    <div class="mac-notch">
+                        <strong><t t-esc="past['guest_name']"/></strong>
+                    </div>
+                    <div class="box-content">
+                        <h3 class="guest-cnic">
+                            <t t-esc="past['guest_cnic']"/>
+                        </h3>
+                        <!-- Room Tag Centered -->
+                        <div class="text-center">
+                            <span class="room-tag">
+                                <t t-esc="past['room_number']"/>
+                            </span>
+                            <br/>
+                        </div>
+
+                        <br/>
+
+                        <div class="room-details">
+                            <p><strong>Check In:</strong> <t t-esc="past['date_ordered']"/></p>
+                            <p><strong>Check Out:</strong> <t t-esc="past['check_out_date']"/></p>
+                            <p><strong>Stay Days:</strong> <t t-esc="past['stay_days']"/></p>
+                            <p><strong>Price:</strong> <t t-esc="past['price']"/> USD</p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+
+
+        <!-- Back Button -->
+        <div class="back-btn-container">
+            <a href="/check/in" class="btn-back">Go Back</a>
+        </div>
+
+
+        <style>
+            /* Base Body Styles */
+            body {
+            <t t-raw="style_background"/>
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #e3f2fd, #bbdefb);
+            color: #fff;
+            /* No page-wide background image */
+            }
+
+            /* Container holding all boxes */
+            .room-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            }
+
+            /* Guest History Box Styles */
+            .guest-history-box {
+            position: relative;
+            overflow: hidden; /* Ensures the pseudo-element stays within the box */
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+            background: transparent; /* No background color here */
+            }
+
+            /* Pseudo-element for dark, blurred background image */
+            .guest-history-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.0)),
+            url('<t t-esc="background_image"/>') no-repeat center center;
+            background-size: cover;
+            filter: blur(5px);
+            -webkit-filter: blur(5px);
+            z-index: -1; /* Place it behind the box content */
+            }
+
+            .guest-history-box:hover {
+            transform: scale(1.05);
+            }
+
+            /* Mac Notch Styles (e.g., title banner) */
+            .mac-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 35px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 0 0 12px 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            }
+
+            /* Content inside the box */
+            .box-content {
+            margin-top: 40px; /* Leaves space for the notch */
+            position: relative;
+            z-index: 2;
+            }
+
+            /* Text and details styling */
+            .guest-cnic, .room-info, .room-details p {
+            color: black !important;
+            }
+
+            .guest-cnic {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            }
+
+            .room-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            }
+
+            .room-tag {
+            background: white; /* Gold background */
+            color: black;
+            padding: 3px 8px;
+            border-radius: 5px;
+            margin-right: 5px;
+            }
+
+            .room-details {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+            }
+
+            .room-details p strong {
+            color: #FFD700;
+            }
+            /* Center the Back Button */
+            .back-btn-container {
+            text-align: center; /* Centers inline elements inside */
+            margin-top: 20px; /* Adjust spacing */
+            }
+
+            /* Back Button Styling */
+            .btn-back {
+            display: inline-block; /* Allows centering inside a block */
+            padding: 10px 20px;
+            background-color: lightskyblue;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            }
+
+            .btn-back:hover {
+            background-color: black;
+            }
+
+        </style>
+
+    </template>
+
+
+</odoo>

@@ -1,0 +1,112 @@
+<odoo>
+    <!-- Form View -->
+    <record id="hotel_room_form_view" model="ir.ui.view">
+        <field name="model">hotel.room</field>
+        <field name="name">hotel.room.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Reset To Draft" name="button_reset" type="object" class="o_event_highlight"
+                            invisible="state=='draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                            <field name="state"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Select Type">
+                            <field name="room_type_id"/>
+                            <field name="guest_id"/>
+                        </group>
+
+                        <group string="Room Facilities">
+                            <field name="ac_facility"/>
+                            <field name="heater_facility"/>
+                            <field name="gym_facility"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Price">
+                            <field name="room_price"/>
+                        </group>
+                    </group>
+
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="hotel_room_list_view" model="ir.ui.view">
+        <field name="model">hotel.room</field>
+        <field name="name">hotel.room.list</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="hotel_room_kanban_view" model="ir.ui.view">
+        <field name="model">hotel.room</field>
+        <field name="name">hotel.room.kanban</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_view o_kanban_grouped">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="room_type_id"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card o_kanban_record p-3 shadow-lg rounded">
+
+                            <!-- Room Type -->
+                            <div class="text-center mb-2">
+                                <h3 style="background-color: pink; color: black; display: inline-block; padding: 5px 10px; border-radius: 8px;">
+                                    <field name="room_type_id"/>
+                                </h3>
+                            </div>
+
+                            <!-- Room Image -->
+                            <div class="hotel-room-image text-center mb-3"
+                                 t-attf-style="height: 150px; background-size: cover; background-position: center; border-radius: 10px; background-image: url('/web/image/hotel.room/#{record.id.raw_value}/room_image');">
+                            </div>
+
+                            <!-- Room Details -->
+                            <div class="o_kanban_details text-center">
+                                <h3 class="font-weight-bold">
+                                    <field name="name"/>
+                                </h3>
+
+                                <!-- Room Status -->
+                                <div class="o_kanban_status mt-2">
+                                    <t t-if="record.state and record.state.raw_value == 'done'">
+                                        <span class="badge badge-success px-3 py-2"
+                                              style="font-size: 14px; border-radius: 10px;">Booked</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge badge-secondary px-3 py-2"
+                                              style="font-size: 14px; border-radius: 10px;">Available</span>
+                                    </t>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+</odoo>

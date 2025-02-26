@@ -1,0 +1,345 @@
+<odoo>
+    <template id="portal_approval_check_in" name="Portal My Home : Approval Check In"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box"
+                     groups="hotel_management.check_in_approval_verify"
+                     style="cursor: pointer; width: 420px; height: 100px;
+            background-color: #ffe5ec; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/approve/check/in'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+
+
+                            <h4 style="color: #4a3f41; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Approval Check-in
+                                <img src="/hotel_management/static/src/img/admin_approval.png" alt="Check-in Icon"
+                                     style="width: 40px; height: 40px; margin-left: 35px;"/>
+                            </h4>
+
+                            <t t-set="count"
+                               t-value="request.env['hotel.base'].sudo().search_count([('state','=','done')])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #6c5b5f; text-align: center;">Your all-time
+                                    check-in approvals</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #5a2d31;"><t
+                                        t-esc="count"/></strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="hotel_check_in_approval" name="Approval Check-In">
+        <t t-call="website.layout">
+            <t t-set="title">Approval Check-In</t>
+
+
+            <!-- Set Dynamic Background Image -->
+            <t t-set="background_image" t-value="'/hotel_management/static/src/img/check_in_approval_bg.jpg'"/>
+            <t t-set="style_background"
+               t-value="'position: relative;'"/>
+
+            <style>
+                body {
+                <t t-raw="style_background"/>
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                }
+
+                body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('<t t-esc="background_image"/>') no-repeat center center;
+                background-size: cover;
+                <!--                filter: blur(1px);-->
+                <!--                -webkit-filter: blur(1px);-->
+                z-index: -1;
+                }
+
+                /* Container Styling */
+                .approval-check-in {
+                max-width: 600px;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+                margin: 50px auto;
+                text-align: left;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .approval-check-in h2 {
+                text-align: center;
+                color: #fff;
+                font-weight: bold;
+                }
+
+                .approval-check-in label {
+                font-weight: bold;
+                display: block;
+                color: #fff;
+                margin-bottom: 5px;
+                }
+
+                /* Input Fields */
+                .form-control {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                padding: 10px;
+                font-size: 16px;
+                width: 100%;
+                }
+
+                .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+                }
+
+                /* Select Dropdown */
+                #room_select {
+                background: rgba(0, 0, 0, 0.5);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                padding: 10px;
+                font-size: 16px;
+                }
+
+                /* Style the dropdown options */
+                #room_select option {
+                background: rgba(0, 0, 0, 0.8);
+                color: #fff;
+                }
+
+                /* Focus effect */
+                #room_select:focus {
+                outline: none;
+                border: 1px solid #E67E22;
+                }
+
+                /* Room Selection Container */
+                .room-container {
+                display: flex;
+                align-items: center;
+                position: relative;
+                }
+
+                /* Adjust the dropdown to accommodate button */
+                #room_select {
+                flex: 1;
+                padding-right: 120px;
+                }
+
+                /* Show Rooms Button */
+                .show-rooms-btn {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: #87CEEB; /* Light Sky Blue */
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.3s ease-in-out;
+                }
+
+                .show-rooms-btn:hover {
+                background-color: #00BFFF; /* Slightly darker sky blue */
+                }
+
+
+                /* Price Display */
+                .price-display {
+                font-size: 18px;
+                font-weight: bold;
+                color: #2ecc71;
+                }
+
+                /* Buttons */
+                .btn-primary {
+                background: #E67E22;
+                border: none;
+                padding: 12px;
+                font-size: 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                width: 100%;
+                color: #fff;
+                transition: background 0.3s ease-in-out;
+                }
+
+                .btn-primary:hover {
+                background: #D35400;
+                }
+            </style>
+
+            <div class="container">
+                <div class="approval-check-in">
+                    <h2>Approval Check In </h2>
+                    <form action="/approve/check/in" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div class="form-group room-selection">
+                            <label>Select Guest To Approve</label>
+                            <div class="room-container">
+                                <select name="select_guest_seq_name" class="form-control" required="required"
+                                        id="select_guest">
+                                    <option value="">🏨 Select Guest</option>
+                                    <t t-foreach="check_ins" t-as="ins">
+                                        <option t-att-value="ins['guest_seq_name']"
+                                                t-att-data-price="ins['guest_seq_name']">
+                                            <t t-esc="ins['guest_seq_name']"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Approve Now</button>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="room_booked_success_view" name="Booking Success">
+        <t t-call="website.layout">
+
+            <!-- Set Background Image for the Entire Page -->
+            <t t-set="page_background" t-value="'/hotel_management/static/src/img/check_in_approval_bg.jpg'"/>
+
+            <!-- Set Background Image for the Success Box -->
+            <t t-set="box_background" t-value="'/hotel_management/static/src/img/approval_success_bg.jpg'"/>
+            <t t-set="style_box_bg"
+               t-value="'background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url(' + box_background + ') no-repeat center center; background-size: cover;'"/>
+
+            <div class="success-container">
+                <div class="success-box" t-att-style="style_box_bg">
+                    <div class="icon-check">✔</div>
+                    <h2>Wait!</h2>
+                    <p>Please wait while we confirm your booking</p>
+                    <a href="/check/in" class="btn-success">Book Another Room</a>
+                </div>
+            </div>
+
+            <style>
+                body {
+                font-family: 'Poppins', sans-serif;
+                color: #fff;
+                position: relative;
+                }
+
+                body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+                url('<t t-esc="page_background"/>') no-repeat center center;
+                background-size: cover;
+                <!--                filter: blur(1px);-->
+                <!--                -webkit-filter: blur(1px);-->
+                z-index: -1;
+                }
+
+                .success-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                padding: 20px;
+                }
+
+                .success-box {
+                padding: 40px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 100%;
+                text-align: center;
+                box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+                transition: transform 0.3s ease-in-out;
+                position: relative;
+                color: white;
+                }
+
+                .success-box::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+                border-radius: 12px;
+                }
+
+                .success-box * {
+                position: relative;
+                z-index: 1;
+                }
+
+                .icon-check {
+                font-size: 50px;
+                color: #2ecc71;
+                margin-bottom: 15px;
+                font-weight: bold;
+                }
+
+                h2 {
+                font-size: 28px;
+                font-weight: 600;
+                margin-bottom: 10px;
+                }
+
+                p {
+                font-size: 16px;
+                opacity: 0.9;
+                margin-bottom: 20px;
+                }
+
+                .btn-success {
+                display: inline-block;
+                padding: 12px 25px;
+                font-size: 18px;
+                font-weight: bold;
+                border-radius: 8px;
+                border: none;
+                background: linear-gradient(135deg, #2ecc71, #27ae60);
+                color: #fff;
+                text-decoration: none;
+                transition: background 0.3s ease-in-out, transform 0.2s;
+                }
+
+                .btn-success:hover {
+                background: linear-gradient(135deg, #27ae60, #2ecc71);
+                transform: scale(1.05);
+                }
+
+                @media (max-width: 768px) {
+                .success-box {
+                width: 90%;
+                }
+                }
+            </style>
+        </t>
+    </template>
+
+
+</odoo>
