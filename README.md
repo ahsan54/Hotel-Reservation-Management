@@ -1,5 +1,43 @@
 # Hotel-Reservation-Management
 
+✨ Features
+✅ Room Type & Creation – Admins can define room types, which serve as the base for creating rooms. Rooms are displayed in a kanban view for an intuitive visual experience.
+
+✅ Dynamic Room Sequence – Each room gets an auto-generated sequence upon creation, ensuring a structured record-keeping system. Sequences are dynamically assigned on form opening and are only finalized when the record is saved—preventing gaps in numbering.
+
+✅ Guest Check-In & Check-Out – Guests can request check-in and check-out with date validations, preventing selection of past or unrealistic future dates.
+
+✅ Approval Workflows – A multi-step approval system ensures that check-ins and check-outs follow the required authorization process. Custom controllers restrict access based on user roles, providing multi-user support with specific access rights.
+
+✅ Guest History Tracking – The system retrieves and displays a guest’s past visits in hotel  based on their CNIC , offering quick insights into returning visitors.
+
+✅ Real-Time Room Availability – The system dynamically fetches and displays available rooms based on booking status, and displayed theor details for guest to know such as price , type , facilities etc...
+
+✅ Dashboard & Reporting – A dedicated admin dashboard provides view on  monthly check-ins and check-outs with key details like guest names, duration of stay, and total pricing and current entertaining guests with details their in , out dates room , price payed and also shows the all room statues , which rooms are booked and free with details.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
